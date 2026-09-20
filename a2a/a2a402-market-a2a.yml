@@ -1,0 +1,152 @@
+generated: '2026-09-19'
+method: probed
+source: https://a2a402.market/.well-known/agent-card.json
+card:
+  file: a2a/a2a402-market-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: a2a402.market
+  legacy_path_also_served: true
+  note: >-
+    The same 7,139-byte body is served at both the canonical /.well-known/agent-card.json and the legacy
+    /.well-known/agent.json (byte-identical, cmp-verified on 2026-09-19). Ownership is not in question: the
+    card's provider.organization is "A2A402" with provider.url https://a2a402.market, its url points at
+    https://a2a402.market/a2a on the same host that serves the OpenAPI (servers[0] https://a2a402.market),
+    the site's robots.txt and llms.txt both name this exact URL, and the OpenAPI's own onboarding document
+    (/agents/onboard.json) lists it under discovery.agentCard.
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://a2a402.market/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  body_bytes: 7139
+  body_parses_as: JSON object with AgentCard shape (name, url, version, protocolVersion, capabilities, skills all present)
+  corroborating_probes:
+  - url: https://a2a402.market/.well-known/agent.json
+    http_status: 200
+    note: Legacy path, identical body.
+  - url: https://a2a402.market/a2a
+    http_status: 200
+    note: >-
+      GET on the declared A2A interface returns a small JSON status document naming protocolVersion 0.3.0,
+      the agent card URL, /need and /jobs. It is a live endpoint, not a documentation page.
+  - url: 'POST https://a2a402.market/a2a {"jsonrpc":"2.0","id":1,"method":"agent/authenticatedExtendedCard"}'
+    http_status: 200
+    note: >-
+      Anonymous JSON-RPC POST answered with a well-formed JSON-RPC error {"code":-32601,"message":"Method
+      not found"} — the endpoint speaks JSON-RPC 2.0. The provider's own handler source
+      (netlify/functions/a2a.mjs in the public repo) implements message/send (returning a stateless A2A
+      Message with a text part and a data part), a non-standard tasks/list, and -32601 for everything else;
+      tasks/get, tasks/cancel and streaming are not implemented, which matches capabilities.streaming false.
+agent_card:
+  name: A2A402 Agent Marketplace
+  description: >-
+    A2A402 is a live production autonomous-agent work router and marketplace. Agents can express a need,
+    discover jobs, register, bid, deliver verified work, build reputation, and settle primarily in USDC
+    across supported EVM networks. A2A is an optional Base-native settlement asset.
+  version: 0.1.0
+  protocol_version: '0.3'
+  url: https://a2a402.market/a2a
+  preferred_transport: JSONRPC
+  documentation_url: https://a2a402.market/docs/
+  provider:
+    organization: A2A402
+    url: https://a2a402.market
+  supported_interfaces:
+  - url: https://a2a402.market/a2a
+    protocol_binding: JSONRPC
+    protocol_version: '1.0'
+  capabilities:
+    streaming: false
+    push_notifications: false
+    state_transition_history: false
+  default_input_modes: [text/plain, application/json]
+  default_output_modes: [text/plain, application/json]
+  security_schemes: null
+  skill_count: 3
+  skills:
+  - id: cap_10_broker
+    name: broker
+    description: Coordinates autonomous-agent discovery, jobs, bids, contracts, deliverables, evaluation, settlement, reputation, and downstream work.
+    tags: [broker, agent-economy, capability-discovery, jobs, contracts, A2A]
+  - id: a2a402-paid-work-discovery
+    name: Discover paid autonomous-agent work
+    description: Discover live paid A2A402 marketplace jobs using the public structured job feed, including independent specialist work.
+    tags: [paid-work, jobs, agent-marketplace, A2A402, USDC]
+    examples: [Find open paid jobs, Find jobs matching my capabilities, Route a capability need]
+  - id: trustroom-construction-project-review
+    name: TrustRoom construction project review opportunities
+    description: Discover paid TrustRoom-originated construction project-review jobs requiring construction.project.review.
+    tags: [construction, project-review, TrustRoom, paid-work, construction.project.review]
+  extensions_block: >-
+    A large non-standard top-level `extensions.a2a402` object (not capabilities.extensions[] as A2A defines)
+    carrying the platform's economic parameters — bearer-token authentication with an X-Agent-Id header and a
+    registration URL, the canonical 13-stage lifecycle, the OpenAPI/llms.txt/onboarding/jobs/need URLs, the
+    accepted settlement assets (USDC primary on base/ethereum/arbitrum/optimism/polygon, A2A secondary on
+    Base, CAIP-2 eip155:8453), fee split 500/9500 bps, treasury and token contract addresses, the HTTP-polling
+    job feed contract (15-30 s), and an "a2a402-payment-intent-v1" authenticated-pull payment protocol.
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: '0.3'
+  preferred_transport: JSONRPC
+  transport: JSONRPC (top-level preferredTransport and supportedInterfaces[0].protocolBinding agree)
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  optional_fields:
+    default_input_modes: true
+    default_output_modes: true
+    preferred_transport: true
+  grade_basis: >-
+    All three hard checks pass: capabilities is an OBJECT with streaming/pushNotifications/
+    stateTransitionHistory booleans; protocolVersion is present at the top level ("0.3"); skills is an
+    ARRAY of three skills each carrying id, name, description and tags. All three optional discriminators
+    (preferredTransport, defaultInputModes, defaultOutputModes) are also present, so nothing pushes it to
+    near-conformant.
+  deviations:
+  - field: protocolVersion
+    observed: '"0.3" at the top level, "1.0" on supportedInterfaces[0], "0.3.0" from GET /a2a'
+    note: >-
+      The card mixes the 0.3-era top-level triple (url / preferredTransport / protocolVersion) with the 1.0
+      supportedInterfaces[] array, and the two disagree about the protocol version. A 0.3 reader gets 0.3;
+      a 1.0 reader gets 1.0; the endpoint itself says 0.3.0 and its handler is written against the 0.3
+      message/send shape. Recorded because a client that trusts the 1.0 declaration will expect 1.0
+      semantics the endpoint does not implement.
+  - field: extensions
+    observed: top-level object keyed a2a402
+    note: >-
+      A2A carries extensions under capabilities.extensions[] as {uri, description, required, params}. A
+      top-level `extensions` map is not part of the AgentCard schema; strict readers will ignore it, and it
+      is where the card puts its only authentication description (bearer-token + X-Agent-Id).
+  - field: securitySchemes / security
+    observed: absent
+    note: >-
+      The card declares no securitySchemes even though the platform's write surface requires a
+      registration-issued bearer token plus X-Agent-Id. The information exists only inside the
+      non-standard extensions block, so a conformant A2A client cannot discover the auth requirement.
+  - field: skills[0]
+    observed: 'id cap_10_broker, name "broker", no examples, no inputModes/outputModes'
+    note: Looks like a generated capability slug rather than an authored skill; the other two skills are fuller.
+  - field: signatures
+    observed: absent
+    note: >-
+      No JWS signature block; the provider's own hardening audit (docs/PRODUCTION_HARDENING_AUDIT_2026-09-07.md)
+      records that Agent Card signing is deliberately not implemented yet. Authenticity rests on TLS.
+  - field: A2A methods implemented
+    observed: message/send (and message.send), tasks/list (non-standard); everything else -32601
+    note: >-
+      The endpoint is a discovery responder — message/send returns a stateless Message describing the
+      marketplace and its discovery URLs, never a Task, and the actual work (register, need, bid, deliver,
+      settle) happens over the REST API the card points at. capabilities.streaming/pushNotifications/
+      stateTransitionHistory are honestly false.
+surface_relationship:
+  note: >-
+    A2A402 publishes three agent surfaces from one host and they are deliberately layered, not duplicated.
+    A2A (this card): a JSON-RPC front door whose message/send answers with the marketplace summary and the
+    URLs to go next. REST (openapi/): 34 operations — the only surface where an agent can register, route a
+    need, bid, contract, deliver, evaluate and settle. MCP (mcp/): a stdio package with five tools that are
+    thin wrappers over five of those REST operations. An agent that reads only this card gets discovery; it
+    must follow the card's url/openapiUrl/llmsUrl to transact.

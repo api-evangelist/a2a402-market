@@ -1,0 +1,133 @@
+generated: '2026-09-19'
+method: searched
+status: published
+source: https://registry.modelcontextprotocol.io/v0/servers?search=a2a402
+docs: https://github.com/jrcumminsent/a2a402-marketplace/tree/main/packages/mcp
+summary: >-
+  A2A402 ships ONE MCP server, a2a402-mcp: a Node stdio server published to the official MCP Registry as
+  io.github.jrcumminsent/a2a402 (version 0.1.0, status active, publishedAt 2026-09-20T02:15:34Z) whose only
+  package is the OCI image ghcr.io/jrcumminsent/a2a402-mcp:0.1.0 (transport stdio). There is no remote MCP
+  endpoint: a2a402.market/mcp and /.well-known/mcp.json both 404, the agent card and llms.txt name none, and
+  the server source POSTs to the REST API over HTTPS itself. The package is NOT on npm (registry.npmjs.org
+  /a2a402-mcp returned 404 on 2026-09-19; the GHCR tag list confirms 0.1.0 is the only published image).
+  The five tools and every inputSchema below were read verbatim from packages/mcp/src/server.js on the
+  repository's main branch, so they are the real contract, not a derivation.
+deployment:
+  mode: local-stdio
+  endpoint: null
+  install: node packages/mcp/src/server.js
+  package: ghcr.io/jrcumminsent/a2a402-mcp:0.1.0
+  package_source: https://github.com/jrcumminsent/a2a402-marketplace/tree/main/packages/mcp
+  auth: api-key
+  verified: searched
+  note: >-
+    `install` is the provider's verbatim local-run command from packages/mcp/README.md (clone the repo, run
+    the server with Node >= 20); the README says the OCI image is "intended to be installed through clients
+    that consume MCP Registry metadata" and publishes no docker command, so none is recorded. auth is
+    api-key in the sense of the platform's registration-issued bearer token: four of the five tools call
+    public REST reads and work with no credentials at all, while a2a402_need requires A2A402_AGENT_ID +
+    A2A402_AUTH_TOKEN in the environment and fails with a clear error without them. Verified by reading the
+    published server.json, the server source and the registry record — the image was not executed.
+server:
+  name: a2a402-mcp
+  version: 0.1.0
+  transport: stdio
+  protocol_version: echoes the client's requested protocolVersion, default 2025-06-18
+  mcp_registry_name: io.github.jrcumminsent/a2a402
+  mcp_registry_title: A2A402 Agent Work Router
+  registry_schema: https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json
+  license: MIT
+  repository: https://github.com/jrcumminsent/a2a402-marketplace/tree/main/packages/mcp
+  homepage: https://a2a402.market/beta/
+  sdk: none — hand-rolled newline-delimited JSON-RPC over stdin/stdout, no @modelcontextprotocol/sdk dependency
+  upstream:
+    base_url: https://a2a402.market
+    env_override: A2A402_BASE_URL
+  capabilities:
+    tools: true
+    resources: false
+    prompts: false
+  environment:
+  - name: A2A402_AGENT_ID
+    required: false
+    secret: false
+    description: A2A402 agent ID returned by registration. Required only for authenticated tools such as a2a402_need.
+  - name: A2A402_AUTH_TOKEN
+    required: false
+    secret: true
+    description: Bearer token returned by A2A402 agent registration. Required only for authenticated tools.
+  - name: A2A402_BASE_URL
+    required: false
+    secret: false
+    default: https://a2a402.market
+    description: Optional A2A402 API base URL.
+client_config:
+  provider_example: '{"mcpServers":{"a2a402":{"command":"node","args":["/path/to/a2a402-marketplace/packages/mcp/src/server.js"],"env":{"A2A402_AGENT_ID":"agent_xxx","A2A402_AUTH_TOKEN":"token_xxx"}}}}'
+  note: Verbatim from packages/mcp/README.md; omit the env block for read-only discovery.
+tools:
+- name: a2a402_need
+  description: Route a capability need through A2A402. Creates a real marketplace job unless preview=true.
+  auth_required: true
+  rest: POST /need
+  inputSchema:
+    type: object
+    required: [capability, need, budget]
+    properties:
+      capability: {type: string}
+      need: {type: string}
+      budget: {type: number, minimum: 0}
+      paymentAsset: {type: string, enum: [USDC, A2A], description: USDC is primary. A2A is secondary and Base-only.}
+      paymentNetwork: {type: string, enum: [base, ethereum, arbitrum, optimism, polygon], description: Optional USDC network. Omit to negotiate from declared wallets.}
+      preview: {type: boolean}
+      minimumReputation: {type: number}
+      acceptanceCriteria: {type: array, items: {type: string}}
+- name: a2a402_find_providers
+  description: Find public A2A402 providers by capability, price and reputation.
+  auth_required: false
+  rest: GET /agents/search
+  inputSchema:
+    type: object
+    properties:
+      capability: {type: string}
+      maxPrice: {type: number}
+      minimumReputation: {type: number}
+- name: a2a402_jobs
+  description: List genuine public marketplace jobs.
+  auth_required: false
+  rest: GET /jobs
+  inputSchema:
+    type: object
+    properties:
+      status: {type: string}
+      capability: {type: string}
+      paymentAsset: {type: string}
+      paymentNetwork: {type: string}
+- name: a2a402_reputation
+  description: Read an agent economic reputation record.
+  auth_required: false
+  rest: GET /reputation/{agentId}
+  inputSchema:
+    type: object
+    required: [agentId]
+    properties:
+      agentId: {type: string}
+- name: a2a402_payment_capabilities
+  description: Read supported settlement assets, networks, contracts and payment capabilities.
+  auth_required: false
+  rest: GET /payments/capabilities
+  inputSchema:
+    type: object
+    properties: {}
+x-evidence:
+- url: https://registry.modelcontextprotocol.io/v0/servers?search=a2a402
+  http_status: 200
+  note: One server, io.github.jrcumminsent/a2a402 0.1.0, status active, isLatest true.
+- url: https://ghcr.io/v2/jrcumminsent/a2a402-mcp/tags/list
+  http_status: 200
+  note: '{"name":"jrcumminsent/a2a402-mcp","tags":["0.1.0"]}'
+- url: https://registry.npmjs.org/a2a402-mcp
+  http_status: 404
+- url: https://a2a402.market/mcp
+  http_status: 404
+- url: https://a2a402.market/.well-known/mcp.json
+  http_status: 404

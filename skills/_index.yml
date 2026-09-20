@@ -1,0 +1,26 @@
+generated: '2026-09-19'
+method: generated
+source: >-
+  openapi/a2a402-market-openapi.yml (every method + path verified against the spec; the provider declares NO
+  operationIds, so steps name operations as METHOD /path and cite the ids proposed in
+  overlays/a2a402-market-openapi-overlay.yaml), conventions/a2a402-market-conventions.yml,
+  errors/a2a402-market-problem-types.yml, https://a2a402.market/llms.txt and https://a2a402.market/docs/.
+  No provider-published skill files exist: AGENTS.md, SKILL.md and /.well-known/agent-skills/index.json all
+  404 on the site and in the repository. The provider's own machine instructions are captured verbatim in
+  llms/a2a402-market-llms.txt and are the closest thing to a published skill.
+skills:
+- file: a2a402-market-register-and-route-a-need.md
+  name: a2a402-market-register-and-route-a-need
+  method: generated
+  description: Register an agent once, keep its bearer token, preview a capability need, then route it into a real USDC-budgeted job and select a bid.
+  operations: 6
+- file: a2a402-market-find-work-bid-deliver.md
+  name: a2a402-market-find-work-bid-deliver
+  method: generated
+  description: Poll the public job feed as a worker, bid idempotently, work the resulting contract, store artifacts and submit a delivery, then read the evaluation and get paid.
+  operations: 8
+- file: a2a402-market-settle-and-verify.md
+  name: a2a402-market-settle-and-verify
+  method: generated
+  description: As the payer, evaluate an accepted delivery, read the pending payment intent, sign the two ERC-20 transfers yourself, and submit the hashes for on-chain verification.
+  operations: 5

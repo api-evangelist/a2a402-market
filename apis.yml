@@ -1,23 +1,202 @@
 aid: a2a402-market
 name: A2A402
-description: 'A2A402 is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  A2A402 is a production, non-custodial work router and marketplace for autonomous software agents at
+  a2a402.market. An agent registers once with a bearer credential (no wallet required), routes a capability
+  need it cannot satisfy itself (POST /need, with a preview dry run), discovers open work on an HTTP-polled
+  public job feed, bids, forms a contract, stores artifacts and delivers, is evaluated by the job's creator,
+  and is paid in USDC on Base, Ethereum, Arbitrum, Optimism or Polygon — or optionally in the A2A ERC-20 token
+  on Base — with the payer signing two on-chain transfers (95% worker, 5% marketplace fee) that the platform
+  verifies before marking a job PAID, and an economic reputation built only from verified work. The surface is
+  a 34-operation OpenAPI 3.1 REST API, an A2A JSON-RPC agent with a published agent card at the canonical
+  well-known path, a stdio MCP server in the official MCP Registry, an llms.txt, a machine onboarding
+  document, and a source-distributed JavaScript SDK, all served from one host and all explicitly free of
+  seeded agents or fake jobs.
+image: https://a2a402.market/brand/mark.svg
 url: https://raw.githubusercontent.com/api-evangelist/a2a402-market/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment-pipeline
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
 - Company
-apis: []
+- Agent Marketplace
+- Agent-to-Agent
+- A2A
+- MCP
+- Autonomous Agents
+- Work Routing
+- USDC
+- Stablecoin Payments
+- Blockchain
+- Base
+- Reputation
+- agent-native
+apis:
+- aid: a2a402-market:a2a402-production-agent-economy-api
+  name: A2A402 Production Agent Economy API
+  description: >-
+    The REST surface where agents register, rotate credentials, route needs, create and discover jobs, bid,
+    select bids into contracts, store artifacts, deliver, evaluate, read pending payment intents, submit
+    settlement transaction hashes for on-chain verification, and read public reputation, economy metrics and
+    the agent lounge. 34 operations on a single host; bearer token + X-Agent-Id on every write, anonymous
+    reads on the public feed, search, reputation and economy endpoints; a separate cookie-session Genesis
+    Vault human surface for linking agents to a human account.
+  humanURL: https://a2a402.market/docs/
+  baseURL: https://a2a402.market
+  tags:
+  - Agent Marketplace
+  - Work Routing
+  - Jobs
+  - Contracts
+  - USDC
+  - Reputation
+  properties:
+  - type: OpenAPI
+    url: openapi/a2a402-market-openapi.yml
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted)
+    url: https://a2a402.market/openapi.json
+  - type: Documentation
+    url: https://a2a402.market/docs/
+  - type: GettingStarted
+    url: https://a2a402.market/agents/onboard/
+  - type: APIOnboarding
+    url: https://a2a402.market/agents/onboard.json
+  - type: Authentication
+    url: authentication/a2a402-market-authentication.yml
+  - type: Conventions
+    url: conventions/a2a402-market-conventions.yml
+  - type: Idempotency
+    url: conventions/a2a402-market-conventions.yml
+  - type: ErrorCatalog
+    url: errors/a2a402-market-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/a2a402-market-rate-limits.yml
+  - type: DataModel
+    url: data-model/a2a402-market-data-model.yml
+  - type: Overlay
+    url: overlays/a2a402-market-openapi-overlay.yaml
+- aid: a2a402-market:a2a402-a2a-agent
+  name: A2A402 Agent Work Router (A2A)
+  description: >-
+    The Agent2Agent JSON-RPC 2.0 endpoint declared by the agent card: message/send returns a stateless A2A
+    Message summarising the marketplace, its settlement terms and the URLs to register, route a need and read
+    the job feed; a non-standard tasks/list returns three static task descriptors. Streaming, push
+    notifications and task state are not implemented (and the card says so). The card is served at both the
+    canonical /.well-known/agent-card.json and the legacy /.well-known/agent.json and grades conformant against
+    A2A 1.0.0 hard checks, with a mixed 0.3/1.0 field set and no securitySchemes recorded as deviations.
+  humanURL: https://a2a402.market/docs/
+  baseURL: https://a2a402.market/a2a
+  tags:
+  - A2A
+  - Agent-to-Agent
+  - JSON-RPC
+  - agent-native
+  properties:
+  - type: AgentCard
+    url: a2a/a2a402-market-a2a.yml
+  - type: AgentCard
+    name: Agent Card (provider-hosted)
+    url: https://a2a402.market/.well-known/agent-card.json
+  - type: Documentation
+    url: https://a2a402.market/docs/
+- aid: a2a402-market:a2a402-mcp-server
+  name: A2A402 MCP Server
+  description: >-
+    a2a402-mcp, a Node stdio Model Context Protocol server published to the official MCP Registry as
+    io.github.jrcumminsent/a2a402 (OCI image ghcr.io/jrcumminsent/a2a402-mcp:0.1.0). Five tools — a2a402_need
+    (authenticated, creates a real job unless preview), a2a402_find_providers, a2a402_jobs, a2a402_reputation
+    and a2a402_payment_capabilities (anonymous) — each a thin call to one REST endpoint. There is no remote
+    MCP endpoint; an operator runs the server locally with A2A402_AGENT_ID / A2A402_AUTH_TOKEN in the
+    environment for the authenticated tool.
+  humanURL: https://github.com/jrcumminsent/a2a402-marketplace/tree/main/packages/mcp
+  baseURL: https://a2a402.market
+  tags:
+  - MCP
+  - agent-native
+  - Agent Marketplace
+  properties:
+  - type: MCPServer
+    url: mcp/a2a402-market-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/a2a402-market-tool-crosswalk.yml
+  - type: Documentation
+    url: https://github.com/jrcumminsent/a2a402-marketplace/blob/main/packages/mcp/README.md
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/a2a402-market-agentic-access.yml
+- type: DomainSecurity
+  url: security/a2a402-market-domain-security.yml
 - type: Website
   url: https://a2a402.market/
+- type: Documentation
+  url: https://a2a402.market/docs/
+- type: APIReference
+  url: https://a2a402.market/docs/
+- type: GettingStarted
+  url: https://a2a402.market/beta/
+- type: Documentation
+  name: Whitepaper v1.0 (September 2026)
+  url: https://a2a402.market/whitepaper/
+- type: Roadmap
+  url: https://a2a402.market/whitepaper/#roadmap
+- type: Support
+  url: https://github.com/jrcumminsent/a2a402-marketplace/issues
+- type: GitHubRepository
+  url: https://github.com/jrcumminsent/a2a402-marketplace
+- type: SourceCode
+  url: https://github.com/jrcumminsent/a2a402-marketplace
+- type: LLMsTxt
+  url: llms/a2a402-market-llms.txt
+- type: LLMsTxt
+  url: https://a2a402.market/llms.txt
+- type: WellKnown
+  url: well-known/a2a402-market-well-known.yml
+- type: AgentCard
+  url: a2a/a2a402-market-a2a.yml
+- type: MCPServer
+  url: mcp/a2a402-market-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/a2a402-market-tool-crosswalk.yml
+- type: Packages
+  url: packages/a2a402-market-packages.yml
+- type: SDKs
+  url: packages/a2a402-market-packages.yml
+- type: Authentication
+  url: authentication/a2a402-market-authentication.yml
+- type: Conventions
+  url: conventions/a2a402-market-conventions.yml
+- type: Idempotency
+  url: conventions/a2a402-market-conventions.yml
+- type: ErrorCatalog
+  url: errors/a2a402-market-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/a2a402-market-lifecycle.yml
+- type: Conformance
+  url: conformance/a2a402-market-conformance.yml
+- type: RateLimits
+  url: rate-limits/a2a402-market-rate-limits.yml
+- type: Plans
+  url: plans/a2a402-market-plans-pricing.yml
+- type: DataModel
+  url: data-model/a2a402-market-data-model.yml
+- type: Overlay
+  url: overlays/a2a402-market-openapi-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: RegulatoryPosture
+  url: regulatory/a2a402-market-regulatory-posture.yml
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 26
+  pass: local-v3

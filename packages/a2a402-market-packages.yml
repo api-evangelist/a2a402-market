@@ -1,0 +1,54 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://github.com/jrcumminsent/a2a402-marketplace (packages/sdk, packages/mcp) plus registry metadata
+  lookups on 2026-09-19: registry.npmjs.org/@a2a402%2Fsdk (404), registry.npmjs.org/a2a402-mcp (404),
+  registry.npmjs.org/-/v1/search?text=a2a402 (0 results), pypi.org/pypi/a2a402/json (404),
+  ghcr.io/v2/jrcumminsent/a2a402-mcp/tags/list (200, tags [0.1.0]),
+  registry.modelcontextprotocol.io/v0/servers?search=a2a402 (200, one server).
+note: >-
+  Two first-party packages, both MIT, both living in the provider's public monorepo, and neither one on a
+  language package registry. @a2a402/sdk is source-distributed only: package.json says 0.2.0 but the name is
+  unpublished on npm, so a consumer must vendor or path-import it. a2a402-mcp is published — but as an OCI
+  image on GHCR through the MCP Registry, not npm. Versions below come from the repository package.json files
+  and the GHCR/MCP-registry records; `published` is the MCP Registry publishedAt for the image and null for
+  the SDK because no registry has ever dated a release of it. The repository itself has no releases or tags
+  (GitHub /releases and /tags both empty), pushed_at 2026-09-20.
+packages:
+- language: javascript
+  name: '@a2a402/sdk'
+  registry: null
+  distribution: source
+  official: true
+  url: https://github.com/jrcumminsent/a2a402-marketplace/tree/main/packages/sdk
+  repository: https://github.com/jrcumminsent/a2a402-marketplace
+  install: null
+  version: 0.2.0
+  version_source: packages/sdk/package.json on main
+  published: null
+  license: MIT
+  runtime: node >= 20, ESM, zero dependencies
+  entry_point: new A2A402Client(); register / need / previewNeed / findProviders / jobs / bid / selectBid / deliver / evaluate / settle / paymentCapabilities / paymentIntents / reputation
+  note: >-
+    registry.npmjs.org/@a2a402%2Fsdk returned 404 on 2026-09-19 — the package name in package.json is not
+    published, and llms.txt links the GitHub directory as "JavaScript SDK source" rather than an npm page.
+    `install` is null because the provider publishes no install command; the docs say to read
+    packages/sdk/src/index.js.
+- language: javascript
+  name: a2a402-mcp
+  registry: oci
+  distribution: container image
+  official: true
+  url: https://github.com/jrcumminsent/a2a402-marketplace/tree/main/packages/mcp
+  repository: https://github.com/jrcumminsent/a2a402-marketplace
+  image: ghcr.io/jrcumminsent/a2a402-mcp:0.1.0
+  mcp_registry: io.github.jrcumminsent/a2a402
+  install: node packages/mcp/src/server.js
+  version: 0.1.0
+  version_source: ghcr.io tag list + MCP Registry record + packages/mcp/package.json
+  published: '2026-09-20'
+  published_source: registry.modelcontextprotocol.io _meta publishedAt 2026-09-20T02:15:34Z
+  license: MIT
+  runtime: node >= 20, stdio MCP server, no SDK dependency
+  note: registry.npmjs.org/a2a402-mcp returned 404; the only distribution is the GHCR image the MCP Registry points at. Command surface in mcp/a2a402-market-mcp.yml.
+sdk_count: 1

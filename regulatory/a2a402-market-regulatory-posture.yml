@@ -1,0 +1,47 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: >-
+  Live probes on a2a402.market on 2026-09-19 of every conventional path (/terms, /terms/, /privacy, /privacy/,
+  /legal, /legal/, /legal/subprocessors, /legal/dpa, /accessibility, /security, /security/, /status,
+  /changelog, /contact, /support, /faq, /about — ALL 404), the sitemap (14 URLs, none legal), the docs page,
+  the whitepaper (§10 Security and custody model, §13 Risks and limitations), llms.txt, the agent card,
+  robots.txt, and the public repository (no SECURITY.md, no privacy or terms documents).
+signals: {}
+absent_with_evidence:
+  terms_of_service:
+    note: No terms of service anywhere on the site, in the sitemap, or in the repository — for a production marketplace that moves real USDC this is the most consequential gap on the surface.
+    evidence:
+    - {url: https://a2a402.market/terms, http_status: 404}
+    - {url: https://a2a402.market/legal/, http_status: 404}
+  privacy_policy:
+    note: No privacy policy, even though POST /human/auth/signup collects email + password and POST /agents/register collects agent endpoints; no data_subject_request, subprocessors, data_residency or incident_notification signal can exist without one.
+    evidence:
+    - {url: https://a2a402.market/privacy, http_status: 404}
+    - {url: https://a2a402.market/legal/dpa, http_status: 404}
+  accessibility_conformance:
+    note: The homepage carries a "Skip to accessible agent list" link (a real accessibility affordance) but no conformance report or VPAT is published.
+    evidence:
+    - {url: https://a2a402.market/accessibility, http_status: 404}
+  security_disclosure:
+    note: No security.txt, no SECURITY.md, no disclosure page; the only reporting channel is the public GitHub issue tracker ("Report a break on GitHub").
+    evidence:
+    - {url: https://a2a402.market/.well-known/security.txt, http_status: 404}
+    - {url: https://a2a402.market/security, http_status: 404}
+    - {url: https://raw.githubusercontent.com/jrcumminsent/a2a402-marketplace/main/SECURITY.md, http_status: 404}
+  ai_transparency:
+    note: >-
+      The platform is explicitly built for autonomous agents and its docs are candid about behaviour
+      (real money, no seeded activity, no custody), but nothing is framed as an AI-transparency or
+      automated-decision disclosure; the Genesis "deterministic auto-evaluate" is the only automated
+      decision named and it is scoped to promotional jobs.
+  sbom: {note: Not searched beyond the repository root — never derived.}
+related_statements_not_signals:
+- {source: https://a2a402.market/whitepaper/#risks, quote: 'Nothing in this document is financial, investment, legal or tax advice.'}
+- {source: https://a2a402.market/llms.txt, quote: 'A2A402 never needs a private key, seed phrase, or signing secret.'}
+- {source: https://a2a402.market/agents/onboard.json, quote: '"truthPolicy":{"fakeAdoption":false,"seededAgents":false,"seededJobs":false,"publicActivity":"real-external-only","settlementClaimRequiresVerification":true}'}
+note: >-
+  An empty signals map is the measurement. A2A402 publishes an unusually honest operational posture
+  (non-custodial, truth model, no manufactured volume) and no legal or compliance surface at all: no
+  terms, no privacy policy, no DPA, no subprocessors, no security contact, no accessibility statement.
+  Which regimes reach it is decided by the Kin Score regime map, not here.

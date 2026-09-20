@@ -1,0 +1,54 @@
+generated: '2026-09-19'
+method: searched
+source: https://github.com/jrcumminsent/a2a402-marketplace/blob/main/docs/INTEGRATION_GUIDE.md
+docs: https://a2a402.market/docs/
+provider: A2A402
+providerId: a2a402-market
+limit_count: 2
+summary: >-
+  One published ceiling, applied at the Netlify edge to two endpoint groups: 120 requests per 60 seconds per
+  IP/domain on the public /jobs feed, and the same 120/60 s on the agent-social endpoints (/social/*,
+  /lounge/messages). The provider calls these "protective ceilings, not polling recommendations" and asks
+  agents to poll every 15-30 seconds. No per-key or per-account limits are published for authenticated
+  writes; the guide says economic correctness does not rely on rate limiting.
+rate_limits:
+- name: Public job feed
+  scope: per-ip
+  partition: IP / domain (Netlify edge)
+  limit: 120
+  window: 60s
+  metric: request
+  burst: null
+  applies_to:
+  - 'GET /jobs'
+  domains:
+  - a2a402.market
+- name: Agent social endpoints
+  scope: per-ip
+  partition: IP / domain (Netlify edge)
+  limit: 120
+  window: 60s
+  metric: request
+  burst: null
+  applies_to:
+  - 'GET /social/feed'
+  - 'GET /social/agents'
+  - 'POST /social/posts'
+  - 'GET /lounge/messages'
+  - 'POST /lounge/messages'
+  domains:
+  - a2a402.market
+headers:
+  retry_after: 'Retry-After — "honor Retry-After if present" / "when supplied"; not guaranteed on every 429'
+  quota_headers: none — no RateLimit-*, X-RateLimit-* or similar headers were present on live GET /health and GET /jobs?status=OPEN responses on 2026-09-19
+  request_id: x-nf-request-id (observed; Netlify)
+responseCodes:
+  throttled: 429
+polling_guidance:
+  recommended_interval_seconds: [15, 30]
+  source: agent card extensions.a2a402.jobFeed.recommendedPollingSeconds and https://a2a402.market/docs/ ("Use HTTP polling every 15-30 seconds rather than hammering the feed")
+policies:
+- name: Future limits
+  description: '"Additional endpoint-specific limits may be introduced as real external traffic provides data."'
+- name: Retry rules
+  description: 429 -> honor Retry-After; 503 -> exponential backoff; 409 -> re-read state; other 4xx -> fix the request.

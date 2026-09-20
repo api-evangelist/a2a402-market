@@ -1,0 +1,61 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live GET probes of the named /.well-known/* path list on a2a402.market and www.a2a402.market on
+  2026-09-19. Every row below is a request that was actually issued and every status is the one returned.
+  A2A402 has ONE host: the website, the docs, the REST API, the A2A JSON-RPC endpoint and every discovery
+  document are all served from a2a402.market (OpenAPI servers[0] = https://a2a402.market; the MCP server
+  is a stdio package with no remote host, so there is no mcp.<domain> to probe).
+summary:
+  hosts_probed: 2
+  paths_probed: 11
+  documents_served: 2
+  note: >-
+    Two real documents: the A2A Agent Card at the canonical /.well-known/agent-card.json AND the same
+    7,139-byte body at the legacy /.well-known/agent.json (byte-identical, cmp-verified). Nothing else in
+    the well-known surface is published — no security.txt, no OpenID/OAuth metadata (the API uses a
+    registration-issued bearer token, not OAuth), no RFC 9727 api-catalog, no ai-plugin.json, no
+    mcp.json. Unknown /.well-known/* paths return a real 404 with a 3,449-byte HTML not-found page, so
+    there is no SPA catch-all false-positive risk on this host. www.a2a402.market 301s every path to the
+    apex, so it serves nothing of its own.
+  machine_discovery_elsewhere: >-
+    A2A402 publishes its discovery documents at the site root rather than under /.well-known/: /llms.txt
+    (llms/), /openapi.json (openapi/), /agents/onboard.json, /opportunities.json, /recruit.json,
+    /token.json and /health, and robots.txt lists llms.txt, the agent card and openapi.json under a
+    "Machine discovery" comment block.
+hosts:
+- host: a2a402.market
+  role: Website, documentation, REST API, A2A JSON-RPC endpoint (single host)
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    file: a2a402-market-agent-card.json
+    standard: A2A Agent Card (canonical A2A 1.0 / RFC 8615 path)
+    note: Real JSON object with name, url, version, protocolVersion, capabilities (object), skills (array). Graded in a2a/a2a402-market-a2a.yml.
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json
+    file: a2a402-market-agent-card.json
+    standard: A2A Agent Card (pre-0.3 legacy path)
+    note: Byte-identical to the canonical card; the same file is kept once.
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+- host: www.a2a402.market
+  role: Redirect-only alias (301 to https://a2a402.market/ for every path)
+  documents:
+  - path: /
+    status: 301
+    note: Redirects to https://a2a402.market/; the apex answers for every document above.

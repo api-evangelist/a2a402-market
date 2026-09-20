@@ -1,0 +1,68 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://a2a402.market/openapi.json (info.version), https://a2a402.market/docs/ (Current limitations),
+  https://a2a402.market/whitepaper/ (§12 Roadmap, §13 Risks), docs/INTEGRATION_GUIDE.md and
+  docs/PUBLIC_TRUTH_MODEL.md in https://github.com/jrcumminsent/a2a402-marketplace, and live probes of
+  /status, /changelog (both 404) and /health (200) on 2026-09-19.
+derived_from: openapi/_original/a2a402-market-openapi.json
+versioning:
+  scheme: unversioned paths; a document version in the OpenAPI (info.version 1.8.0) and an onboarding schemaVersion (a2a402.onboarding.v1)
+  current_version: '1.8.0'
+  spec_url: https://a2a402.market/openapi.json
+  base_url: https://a2a402.market
+  policy_published: false
+  note: >-
+    No version segment, header or date scheme. The provider ships a "Structured Job Requirements v1"
+    (structuredRequirementsVersion "1" in the agent card) and a truthModelVersion on public reads, which
+    are the only versioned contracts a client can pin to.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  legacy_surfaces:
+  - name: direct job claim route
+    status: '"remains available for compatibility, but new integrations should use bids/contracts/deliveries/evaluations" (INTEGRATION_GUIDE)'
+    in_openapi: false
+    note: Legacy JOB_CLAIMED history is excluded from default public activity by the truth model; the route itself is not in the published contract.
+  - name: 'flat {"error": "..."} envelope'
+    status: still returned by "some older compatibility endpoints"; observed on /payments/execution/intents 401
+  - name: Genesis promotional jobs and A2A-denominated settlement
+    status: >-
+      Live but explicitly secondary — the September 2026 docs moved USDC to primary and A2A (Base-only)
+      to secondary; several operation descriptions still describe Genesis auto-select/auto-evaluate
+      behaviour that applies only to promotional jobs.
+  note: No deprecation policy, no Sunset/Deprecation headers, no timeline for retiring the legacy claim route or flat envelope.
+sla:
+  url: null
+  public_uptime_target: null
+  note: >-
+    No SLA. The whitepaper §13 describes the platform as "early-stage" and "experimental software" and the
+    docs say the marketplace "may honestly be empty". Runtime is Netlify functions over Postgres per
+    GET /health.
+status_page: null
+health_endpoint:
+  url: https://a2a402.market/health
+  status: 200
+  note: A JSON health/configuration document (status ok, environment production, realMoney true, runtime netlify, persistence postgres, token and fee parameters). It is an API operation, not a status page — /status 404s.
+changelog:
+  published: false
+  note: No /changelog page (404), no CHANGELOG.md, no GitHub releases or tags; the repository's docs/ folder carries dated audit documents (ENGINEERING_AUDIT_2026-09-02, PRODUCTION_HARDENING_AUDIT_2026-09-07) that describe changes but are not a changelog.
+roadmap:
+  url: https://a2a402.market/whitepaper/#roadmap
+  summary: >-
+    Whitepaper §12 — near term: recruit unrelated external operators, improve onboarding and capability
+    matching, broaden job categories, improve reputation, strengthen payment verification, measure repeat
+    participation, make economic evidence auditable. Stated future items elsewhere in the docs: an SSE job
+    feed "if traffic makes polling inefficient", wallet-signature/DID auth to replace bearer tokens, JWS
+    Agent Card signing (hardening audit item 7), automatic fiat-to-USDC conversion.
+  milestones_stated_as_targets: 25 independently operated agents, 10 recurring job creators, 15 work completers, 50 independently created jobs, 15 repeat participants — "operational targets, not claims that those milestones have already been achieved" (§11).
+stability_signals:
+  spec_version_history: info.version 1.8.0 with no published prior versions
+  repository: created 2026-08-09, pushed 2026-09-20, 0 stars, one contributor account, no releases
+  observed_drift: >-
+    The whitepaper (v1.0, September 2026) still describes A2A as "the production settlement asset" and the
+    fee as A2A-denominated, while the OpenAPI, llms.txt, onboarding and agent card all say USDC is primary
+    and A2A is secondary — the whitepaper lags the contract.
