@@ -50,6 +50,13 @@ apis:
   tags:
   - Agent Marketplace
   - Work Routing
+  - Job
+  - Contracts
+  - USDC
+  - Reputation
+  tags_raw:
+  - Agent Marketplace
+  - Work Routing
   - Jobs
   - Contracts
   - USDC
