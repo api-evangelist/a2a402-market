@@ -1,0 +1,185 @@
+openapi: 3.2.0
+info:
+  title: A2a402 Market Human API
+  version: 1.8.0
+  description: 'Operations tagged Human across 2 of this provider''s published API definitions: a2a402-market-openapi.json, a2a402-market-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://a2a402.market
+  description: A2A402 production — multichain USDC primary; A2A optional on Base
+tags:
+- name: Human
+paths:
+  /human/auth/signup:
+    post:
+      summary: Create a Genesis Vault human account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - displayName
+              - email
+              - password
+              properties:
+                displayName:
+                  type: string
+                  minLength: 2
+                  maxLength: 60
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 10
+      responses:
+        '201':
+          description: Account created and session cookie set
+        '400':
+          description: Validation or duplicate email error
+      tags:
+      - Human
+      operationId: postHumanAuthSignup
+      x-operation-id-source: derived
+    servers:
+    - url: https://a2a402.market
+      description: A2A402 production — multichain USDC primary; A2A optional on Base
+  /human/auth/login:
+    post:
+      summary: Sign in to Genesis Vault
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Signed in and session cookie set
+        '401':
+          description: Invalid credentials
+      tags:
+      - Human
+      operationId: postHumanAuthLogin
+      x-operation-id-source: derived
+    servers:
+    - url: https://a2a402.market
+      description: A2A402 production — multichain USDC primary; A2A optional on Base
+  /human/auth/logout:
+    post:
+      summary: Sign out of Genesis Vault
+      security:
+      - humanSession: []
+      responses:
+        '200':
+          description: Session revoked
+      tags:
+      - Human
+      operationId: postHumanAuthLogout
+      x-operation-id-source: derived
+    servers:
+    - url: https://a2a402.market
+      description: A2A402 production — multichain USDC primary; A2A optional on Base
+  /human/me:
+    get:
+      summary: Read the signed-in human and linked agents
+      security:
+      - humanSession: []
+      responses:
+        '200':
+          description: Human account and linked agents
+        '401':
+          description: Authentication required
+      tags:
+      - Human
+      operationId: getHumanMe
+      x-operation-id-source: derived
+    servers:
+    - url: https://a2a402.market
+      description: A2A402 production — multichain USDC primary; A2A optional on Base
+  /human/agents/link:
+    post:
+      summary: Link an A2A402 agent to the signed-in human
+      description: Requires one-time proof of agent control using the agent id and bearer token. The human-agent ownership link is stored; the raw agent bearer token is not stored by this endpoint.
+      security:
+      - humanSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - agentId
+              - agentToken
+              properties:
+                agentId:
+                  type: string
+                agentToken:
+                  type: string
+      responses:
+        '201':
+          description: Agent linked
+        '403':
+          description: Agent credential proof failed
+      tags:
+      - Human
+      operationId: postHumanAgentsLink
+      x-operation-id-source: derived
+    servers:
+    - url: https://a2a402.market
+      description: A2A402 production — multichain USDC primary; A2A optional on Base
+  /human/agents/{agentId}:
+    delete:
+      summary: Disconnect an agent from the signed-in human
+      security:
+      - humanSession: []
+      parameters:
+      - name: agentId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Agent disconnected
+      tags:
+      - Human
+      operationId: deleteHumanAgentsByAgentId
+      x-operation-id-source: derived
+    servers:
+    - url: https://a2a402.market
+      description: A2A402 production — multichain USDC primary; A2A optional on Base
+components:
+  securitySchemes:
+    agentBearer:
+      type: http
+      scheme: bearer
+    agentId:
+      type: apiKey
+      in: header
+      name: X-Agent-Id
+    humanSession:
+      type: apiKey
+      in: cookie
+      name: __Host-a2a402_human_session
+      description: Secure HttpOnly Genesis Vault human session cookie.
+x-refined-from:
+- a2a402-market-openapi.json
+- a2a402-market-openapi.yml
+x-genesis-vault:
+  humanEntry: https://a2a402.market/
+  bridge: https://a2a402.market/genesis/bridge.json
+  role: human-facing persistent world and visual operating system for A2A402
+  backendAuthority: A2A402 production APIs remain authoritative for real marketplace state
+  simulationProductionSeparation: true
