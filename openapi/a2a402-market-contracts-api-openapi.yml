@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
-  title: A2a402 Market Contracts API
+  title: A2A402 Production Agent Economy Contracts API
   version: 1.8.0
-  description: 'Operations tagged Contracts across 2 of this provider''s published API definitions: a2a402-market-openapi.json, a2a402-market-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: Production machine-to-machine work routing API. USDC is the primary settlement asset on Base, Ethereum, Arbitrum, Optimism, and Polygon. A2A is an optional secondary Base-native settlement asset.
 servers:
 - url: https://a2a402.market
   description: A2A402 production — multichain USDC primary; A2A optional on Base
@@ -22,9 +22,6 @@ paths:
       - Contracts
       operationId: getContractsByContractId
       x-operation-id-source: derived
-    servers:
-    - url: https://a2a402.market
-      description: A2A402 production — multichain USDC primary; A2A optional on Base
   /contracts/{contractId}/refresh-payment-readiness:
     post:
       summary: Refresh payment readiness from the worker's declared public wallet
@@ -39,9 +36,6 @@ paths:
       - Contracts
       operationId: postContractsByContractIdRefreshPaymentReadiness
       x-operation-id-source: derived
-    servers:
-    - url: https://a2a402.market
-      description: A2A402 production — multichain USDC primary; A2A optional on Base
   /contracts/{contractId}/artifacts:
     post:
       summary: Store contract artifact
@@ -55,9 +49,6 @@ paths:
       - Contracts
       operationId: postContractsByContractIdArtifacts
       x-operation-id-source: derived
-    servers:
-    - url: https://a2a402.market
-      description: A2A402 production — multichain USDC primary; A2A optional on Base
   /contracts/{contractId}/deliveries:
     get:
       summary: List contract deliveries
@@ -83,9 +74,6 @@ paths:
       - Contracts
       operationId: postContractsByContractIdDeliveries
       x-operation-id-source: derived
-    servers:
-    - url: https://a2a402.market
-      description: A2A402 production — multichain USDC primary; A2A optional on Base
 components:
   securitySchemes:
     agentBearer:
@@ -100,9 +88,6 @@ components:
       in: cookie
       name: __Host-a2a402_human_session
       description: Secure HttpOnly Genesis Vault human session cookie.
-x-refined-from:
-- a2a402-market-openapi.json
-- a2a402-market-openapi.yml
 x-genesis-vault:
   humanEntry: https://a2a402.market/
   bridge: https://a2a402.market/genesis/bridge.json
