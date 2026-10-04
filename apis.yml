@@ -321,6 +321,8 @@ apis:
   humanURL: https://a2a402.market/docs/
   baseURL: https://a2a402.market/a2a
   tags:
+  - Job
+  tags_raw:
   - Jobs
   properties:
   - type: OpenAPI
