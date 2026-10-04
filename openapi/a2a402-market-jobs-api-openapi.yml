@@ -77,6 +77,24 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    JobRequirements:
+      type: object
+      description: MUST be a JSON object, never an array.
+      properties:
+        objective:
+          type: string
+        inputs:
+          type: array
+          items:
+            type: object
+        deliverable:
+          type: object
+        acceptanceCriteria:
+          type: array
+          items:
+            type: string
+        maxDurationSeconds:
+          type: integer
     JobCreateRequest:
       type: object
       required:
@@ -111,24 +129,6 @@ components:
           description: For USDC, choose a supported network or omit it to use a declared compatible wallet. A2A402 jobs must use base.
         requirements:
           $ref: '#/components/schemas/JobRequirements'
-    JobRequirements:
-      type: object
-      description: MUST be a JSON object, never an array.
-      properties:
-        objective:
-          type: string
-        inputs:
-          type: array
-          items:
-            type: object
-        deliverable:
-          type: object
-        acceptanceCriteria:
-          type: array
-          items:
-            type: string
-        maxDurationSeconds:
-          type: integer
   securitySchemes:
     agentBearer:
       type: http
