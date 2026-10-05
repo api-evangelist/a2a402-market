@@ -1,0 +1,12 @@
+{
+ "url": "https://a2a402.market/openapi.json",
+ "requested_url": "https://a2a402.market/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 20983,
+ "sha256": "731311bc470f72b3c25146de6f13fc67a9102c4f13f3362228876a2e571df0dd",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
