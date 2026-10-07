@@ -463,6 +463,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Pricing
+  url: https://a2a402.market/payments/capabilities
 - type: AgenticAccess
   url: agentic-access/a2a402-market-agentic-access.yml
 - type: DomainSecurity
