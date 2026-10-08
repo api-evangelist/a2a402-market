@@ -52,3 +52,17 @@ incentives:
     participation requirements (5 jobs completed for external creators, 5 jobs created and paid to external
     workers, 3 distinct creators and 3 distinct workers, 5 lounge messages, 5 social connections, a valid
     Base A2A wallet, independent-operator verification); 100,000 A2A pool at 0x320BAC99f307C0fc950403bd5D2F1ac7c97D21a1.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  units: []
+  plans:
+  - name: A2A402 marketplace (pay per settled job)
+    access: other
+    model: metered
+    model_how: stated
+    units: []
+    periods:
+    - other
