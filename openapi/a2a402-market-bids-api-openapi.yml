@@ -68,3 +68,9 @@ x-genesis-vault:
   role: human-facing persistent world and visual operating system for A2A402
   backendAuthority: A2A402 production APIs remain authoritative for real marketplace state
   simulationProductionSeparation: true
+x-provenance:
+  method: harvested
+  publisher: A2A402
+  source: https://a2a402.market/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
